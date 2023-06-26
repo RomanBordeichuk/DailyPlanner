@@ -5,6 +5,8 @@ namespace DailyPlanner.Models
 {
     public class User : IUser
     {
+        public int Id { get; set; }
+
         [Required]
         [MinLength(3, ErrorMessage = "Login must have at least 3 letters")]
         [MaxLength(30, ErrorMessage = "Login must have not more than 30 letters")]

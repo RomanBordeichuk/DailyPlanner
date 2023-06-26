@@ -1,8 +1,19 @@
+using DailyPlanner.Repository;
+using DailyPlanner.Repository.Interfaces;
+using DailyPlanner.Repository.Repos;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+string? connectionString =
+    builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<AppDbContext>(options => 
+    options.UseSqlServer(connectionString));
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 var app = builder.Build();
 

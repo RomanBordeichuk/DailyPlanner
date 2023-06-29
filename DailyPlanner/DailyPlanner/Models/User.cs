@@ -14,7 +14,6 @@ namespace DailyPlanner.Models
 
         [Required]
         [MinLength(5, ErrorMessage = "Password must have at least 5 letters")]
-        [MaxLength(20, ErrorMessage = "Password must have not more than 20 letters")]
         public string? Password { get; set; }
     }
 }

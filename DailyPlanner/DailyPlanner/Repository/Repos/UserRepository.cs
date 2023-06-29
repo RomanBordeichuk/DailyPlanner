@@ -1,4 +1,5 @@
-﻿using DailyPlanner.Models;
+﻿using DailyPlanner.Repository.Hashing;
+using DailyPlanner.Models;
 using DailyPlanner.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,10 @@ namespace DailyPlanner.Repository.Repos
 
         public async Task<User> AddAsync(User user)
         {
+            user.Password = PasswordHashing.HashPassword(user.Password!);
+
+            Console.WriteLine(user.Password);
+
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
 
@@ -50,6 +55,8 @@ namespace DailyPlanner.Repository.Repos
 
             if(oldUser != null)
             {
+                user.Password = PasswordHashing.HashPassword(user.Password!);
+
                 user = oldUser;
                 await _context.SaveChangesAsync();
             }
@@ -68,6 +75,21 @@ namespace DailyPlanner.Repository.Repos
             }
 
             throw new Exception("Incorrect id");
+        }
+        public async Task<bool> ContainsAsync(User user)
+        {
+            user.Password = PasswordHashing.HashPassword(user.Password!);
+
+            User? dbUser = await _context.Users.FirstOrDefaultAsync(
+                u => u.Login == user.Login && 
+                u.Password == user.Password);
+
+            if(dbUser != null)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

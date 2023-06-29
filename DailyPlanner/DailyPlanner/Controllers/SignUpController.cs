@@ -23,8 +23,14 @@ namespace DailyPlanner.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _userRepository.AddAsync(user);
+                if(await _userRepository.ContainsAsync(user))
+                {
+                    ViewData["ContainsUser"] = true;
+                    return View();
+                }
 
+                ViewData["ContainsUser"] = false;
+                await _userRepository.AddAsync(user);
                 return Redirect("Main");
             }
 

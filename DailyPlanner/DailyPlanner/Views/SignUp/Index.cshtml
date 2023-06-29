@@ -26,5 +26,11 @@
 
     <a asp-action="Index" asp-controller="Home">
         Already have account? Sign In!
-    </a>
+    </a><br><br>
+
+    @if(ViewData["ContainsUser"] != null && 
+        (bool)ViewData["ContainsUser"]! == true)
+    {
+        <span>Account already exists</span>
+    }
 </div>

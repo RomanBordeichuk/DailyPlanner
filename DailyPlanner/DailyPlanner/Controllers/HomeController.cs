@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using DailyPlanner.Interfaces;
 using DailyPlanner.Repository.Interfaces;
+using DailyPlanner.Models;
 
 namespace DailyPlanner.Controllers
 {
@@ -19,13 +19,18 @@ namespace DailyPlanner.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(IUser user)
+        public async Task<IActionResult> Index(User user)
         {
             if (ModelState.IsValid)
             {
-                
+                if(await _userRepository.ContainsAsync(user))
+                {
+                    ViewData["ContainsUser"] = true;
+                    return Redirect("Main");
+                }
 
-                return Redirect("Main");
+                ViewData["ContainsUser"] = false;
+                return View();
             }
 
             return View();

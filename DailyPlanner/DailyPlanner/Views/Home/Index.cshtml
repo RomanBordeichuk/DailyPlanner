@@ -26,5 +26,11 @@
 
     <a asp-action="Index" asp-controller="SignUp">
         Not registered yet? Sign Up!
-    </a>
+    </a><br><br>
+
+    @if (ViewData["ContainsUser"] != null && 
+        (bool)ViewData["ContainsUser"]! == false)
+    {
+        <span>Incorrect login or password</span>
+    }
 </div>

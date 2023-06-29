@@ -13,7 +13,9 @@ string? connectionString =
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(options => 
     options.UseSqlServer(connectionString));
+
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IDailyTaskRepository, DailyTaskRepository>();
 
 var app = builder.Build();
 

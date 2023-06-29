@@ -3,8 +3,8 @@
 namespace DailyPlanner.Repository.Interfaces
 {
     public interface IUserRepository : 
-        IBaseRepository<User>
+        IBaseRepository<UserModel, UserViewModel>
     {
-        Task<bool> ContainsAsync(User user);
+        Task<bool> ContainsAsync(UserModel user);
     }
 }

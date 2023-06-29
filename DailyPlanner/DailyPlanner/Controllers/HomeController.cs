@@ -19,7 +19,7 @@ namespace DailyPlanner.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(User user)
+        public async Task<IActionResult> Index(UserModel user)
         {
             if (ModelState.IsValid)
             {

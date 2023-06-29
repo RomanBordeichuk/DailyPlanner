@@ -1,0 +1,29 @@
+@using DailyPlanner.Models
+@using DailyPlanner.Enums
+
+@model DailyTaskModel
+@{
+    ViewData["Title"] = "Daily Tasks";
+}
+
+<h1>Daily Tasks</h1>
+<a asp-controller="Main" asp-action="Index">Back to Main</a>
+
+<form method="post" asp-controller="DailyTasks" asp-action="Index">
+    <div>
+        <textarea cols="30" rows="10" asp-for="TaskDescription"></textarea>
+        <select asp-for="Importance">
+            <option value="0">Important</option>
+            <option value="1">Optional</option>
+        </select>
+        <select asp-for="Status">
+            <option value="0"></option>
+            <option value="1">Completed</option>
+            <option value="2">PartlyCompleted</option>
+            <option value="3">NotStarted</option>
+        </select>
+    </div>
+    <div>
+        <button type="submit">Save</button>
+    </div>
+</form>

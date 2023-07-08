@@ -1,5 +1,4 @@
 @using DailyPlanner.Models
-@using DailyPlanner.Enums
 
 @model DailyTaskModel
 @{
@@ -13,14 +12,14 @@
     <div>
         <textarea cols="30" rows="10" asp-for="TaskDescription"></textarea>
         <select asp-for="Importance">
-            <option value="0">Important</option>
-            <option value="1">Optional</option>
+            <option value="Important">Important</option>
+            <option value="Optional">Optional</option>
         </select>
         <select asp-for="Status">
-            <option value="0"></option>
-            <option value="1">Completed</option>
-            <option value="2">PartlyCompleted</option>
-            <option value="3">NotStarted</option>
+            <option value="NotMarked"></option>
+            <option value="Completed">Completed</option>
+            <option value="PartlyCompleted">PartlyCompleted</option>
+            <option value="NotStarted">NotStarted</option>
         </select>
     </div>
     <div>

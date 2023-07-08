@@ -14,7 +14,12 @@ namespace DailyPlanner.Models
         public Importance Importance { get; set; }
         public Status Status { get; set; }
 
-        public DailyTaskModel(string taskDescription,
+        public DailyTaskModel()
+        {
+            Importance = Importance.Optional;
+            Status = Status.NotStarted;
+        }
+        public DailyTaskModel(string taskDescription, 
             Importance importance, Status status)
         {
             TaskDescription = taskDescription;

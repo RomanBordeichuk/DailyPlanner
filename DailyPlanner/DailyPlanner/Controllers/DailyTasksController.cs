@@ -18,15 +18,16 @@ namespace DailyPlanner.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Index(DailyTaskModel dailyTask)
         {
-            Console.WriteLine(dailyTask.TaskDescription);
-            Console.WriteLine(dailyTask.Importance);
-            Console.WriteLine(dailyTask.Status);
-            Console.WriteLine("--------------------");
+            if (ModelState.IsValid)
+            {
+                await _dailyTaskRepository.AddAsync(dailyTask);
 
-            //await _dailyTaskRepository.AddAsync(dailyTask);
+                return View();
+            }
 
             return View();
         }

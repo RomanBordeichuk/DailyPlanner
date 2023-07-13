@@ -1,19 +1,27 @@
 ﻿using DailyPlanner.Interfaces;
 using DailyPlanner.Repository.Entitites;
+using DailyPlanner.StaticClasses;
 using System.ComponentModel.DataAnnotations;
 
 namespace DailyPlanner.Models
 {
-    public class UserModel : IUserModel
+    public class UserModel : IHomePageModel
     {
         [Required]
-        [MinLength(3, ErrorMessage = "Login must have at least 3 letters")]
-        [MaxLength(30, ErrorMessage = "Login must have not more than 30 letters")]
-        public string Login { get; set; } = null!;
+        [MinLength(3, ErrorMessage = 
+            "Login must have at least 3 letters")]
+        public string UserLogin { get; set; } = null!;
 
         [Required]
-        [MinLength(5, ErrorMessage = "Password must have at least 5 letters")]
-        [MaxLength(30, ErrorMessage = "Login must have not more than 30 letters")]
-        public string Password { get; set; } = null!;
+        [MinLength(6, ErrorMessage =
+            "Password must have at least 6 letters")]
+        public string UserPassword { get; set; } = null!;
+
+        public bool HasUserInDb { get; set; }
+
+        public void SetUser(UserEntity user)
+        {
+            CurrentUserStatic.User = user;
+        }
     }
 }

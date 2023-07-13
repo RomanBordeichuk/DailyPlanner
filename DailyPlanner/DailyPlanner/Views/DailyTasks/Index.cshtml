@@ -1,28 +1,54 @@
 @using DailyPlanner.Models
 
-@model DailyTaskModel
+@model DailyTasksModel
 @{
     ViewData["Title"] = "Daily Tasks";
 }
 
 <h1>Daily Tasks</h1>
+
 <a asp-controller="Main" asp-action="Index">Back to Main</a>
 
-<form method="post" asp-controller="DailyTasks" asp-action="Index">
+<form method="post" asp-controller="DailyTasks" asp-action="SaveTasks">
     <div>
-        <textarea cols="30" rows="10" asp-for="TaskDescription"></textarea>
-        <select asp-for="Importance">
+        <input type="text" asp-for="DateString">
+        <button asp-controller="DailyTasks" asp-action="ChangeDate">
+            Change date
+        </button>
+    </div>
+    <div>
+        @for(int i = 0; i < Model.ErrorsMessagesList.Count; i++){
+            <span>@Model.ErrorsMessagesList[i]</span><br>
+        }
+    </div>
+    <div>
+        <button type="submit">Save</button>
+        <button asp-controller="DailyTasks" asp-action="DiscardChanges">
+            Discard changes
+        </button>
+    </div>
+    @for(int i = 0; i < Model.NumTasks; i++){
+    <div>
+        <textarea cols="30" rows="10" 
+            asp-for="DailyTasks[i].TaskDescription"></textarea>
+        <select asp-for="DailyTasks[i].Importance">
             <option value="Important">Important</option>
             <option value="Optional">Optional</option>
         </select>
-        <select asp-for="Status">
+        <select asp-for="DailyTasks[i].Status">
             <option value="NotMarked"></option>
             <option value="Completed">Completed</option>
             <option value="PartlyCompleted">PartlyCompleted</option>
             <option value="NotStarted">NotStarted</option>
         </select>
     </div>
+    }
     <div>
-        <button type="submit">Save</button>
+        <button asp-controller="DailyTasks" asp-action="AddNewColumn">
+            Add New Column
+        </button>
+        <button asp-controller="DailyTasks" asp-action="DropLatestColumn">
+            Drop Latest Column
+        </button>
     </div>
 </form>

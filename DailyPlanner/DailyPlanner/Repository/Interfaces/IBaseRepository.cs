@@ -1,11 +1,11 @@
 ﻿namespace DailyPlanner.Repository.Interfaces
 {
-    public interface IBaseRepository<T, K>
+    public interface IBaseRepository<T>
     {
-        Task<K> AddAsync(T entity);
-        Task<K> GetByIdAsync(int id);
-        Task<List<K>> GetAllAsync();
-        Task<K> UpdateByIdAsync(int id, T entity);
-        Task<K> DeleteByIdAsync(int id);
+        Task<T> AddAsync(T entity);
+        Task<T> GetByIdAsync(int id);
+        Task<List<T>> GetAllAsync();
+        Task<T> UpdateByIdAsync(int id, T entity);
+        Task<T> DeleteByIdAsync(int id);
     }
 }

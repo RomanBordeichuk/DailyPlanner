@@ -3,7 +3,7 @@ using DailyPlanner.Models;
 
 namespace DailyPlanner.Controllers
 {
-    public class HomeController : Controller
+    public class SignUpController : Controller
     {
         public IActionResult Index()
         {
@@ -15,10 +15,7 @@ namespace DailyPlanner.Controllers
         {
             if (ModelState.IsValid)
             {
-                Console.WriteLine("User has been authentificated");
-                Console.WriteLine(
-                    $"Login: {user.Login}, " +
-                    $"Password: {user.Password}");
+                Console.WriteLine("User has been saved");
 
                 return Redirect("Main");
             }

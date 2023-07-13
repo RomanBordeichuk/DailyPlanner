@@ -1,6 +1,6 @@
 @using DailyPlanner.Models
 
-@model User
+@model UserModel
 @{
     ViewData["Title"] = "Sign up";
 }
@@ -10,14 +10,14 @@
 
     <form method="POST" asp-action="index" asp-controller="SignUp">
         <div>
-            <label asp-for="Login">Login</label>
-            <input type="text" asp-for="Login">
-            <span asp-validation-for="Login"></span>
+            <label asp-for="UserLogin">Login</label>
+            <input type="text" asp-for="UserLogin">
+            <span asp-validation-for="UserLogin"></span>
         </div>
         <div>
-            <label asp-for="Password">Password</label>
-            <input type="text" asp-for="Password">
-            <span asp-validation-for="Password"></span>
+            <label asp-for="UserPassword">Password</label>
+            <input type="text" asp-for="UserPassword">
+            <span asp-validation-for="UserPassword"></span>
         </div>
         <div>
             <button type="submit">Sign up</button>
@@ -28,8 +28,7 @@
         Already have account? Sign In!
     </a><br><br>
 
-    @if(ViewData["ContainsUser"] != null && 
-        (bool)ViewData["ContainsUser"]! == true)
+    @if(Model != null && Model.HasUserInDb) 
     {
         <span>Account already exists</span>
     }

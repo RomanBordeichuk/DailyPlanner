@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 string? connectionString =
     builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(options => 
     options.UseSqlServer(connectionString));
+
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IDailyTasksRepository, DailyTasksRepository>();
 
 var app = builder.Build();
 

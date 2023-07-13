@@ -5,25 +5,24 @@
 namespace DailyPlanner.Migrations
 {
     /// <inheritdoc />
-    public partial class deleted_FavouriteCatColumn_into_users : Migration
+    public partial class deleted_date_column_from_dailyTasks : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "FavouriteCat",
-                table: "Users");
+                name: "Date",
+                table: "DailyTasks");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "FavouriteCat",
-                table: "Users",
+                name: "Date",
+                table: "DailyTasks",
                 type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
+                nullable: true);
         }
     }
 }

@@ -1,10 +1,11 @@
-﻿using DailyPlanner.Models;
+﻿using DailyPlanner.Repository.Entitites;
 
 namespace DailyPlanner.Repository.Interfaces
 {
     public interface IUserRepository : 
-        IBaseRepository<User>
+        IBaseRepository<UserEntity>
     {
-        Task<bool> ContainsAsync(User user);
+        Task<bool> ContainsAsync(UserEntity user);
+        Task<UserEntity> GetAsync(UserEntity user);
     }
 }

@@ -1,7 +1,7 @@
-﻿using DailyPlanner.Repository.Hashing;
-using DailyPlanner.Models;
-using DailyPlanner.Repository.Interfaces;
+﻿using DailyPlanner.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using DailyPlanner.Repository.Entitites;
+using DailyPlanner.Repository.Hashing;
 
 namespace DailyPlanner.Repository.Repos
 {
@@ -14,20 +14,16 @@ namespace DailyPlanner.Repository.Repos
             _context = context;
         }
 
-        public async Task<User> AddAsync(User user)
+        public async Task<UserEntity> AddAsync(UserEntity user)
         {
-            user.Password = PasswordHashing.HashPassword(user.Password!);
-
-            Console.WriteLine(user.Password);
-
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
 
             return user;
         }
-        public async Task<User> GetByIdAsync(int id)
+        public async Task<UserEntity> GetByIdAsync(int id)
         {
-            User? user = 
+            UserEntity? user = 
                 await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
             
             if(user != null)
@@ -37,9 +33,9 @@ namespace DailyPlanner.Repository.Repos
 
             throw new Exception("User not found");
         }
-        public async Task<List<User>> GetAllAsync()
+        public async Task<List<UserEntity>> GetAllAsync()
         {
-            List<User>? users = await _context.Users.ToListAsync();
+            List<UserEntity>? users = await _context.Users.ToListAsync();
 
             if(users != null)
             {
@@ -48,40 +44,42 @@ namespace DailyPlanner.Repository.Repos
 
             throw new Exception("Users not found");
         }
-        public async Task<User> UpdateByIdAsync(int id, User user)
+        public async Task<UserEntity> UpdateByIdAsync(int id, UserEntity user)
         {
             var oldUser = 
                 await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
 
             if(oldUser != null)
             {
-                user.Password = PasswordHashing.HashPassword(user.Password!);
-
-                user = oldUser;
+                oldUser = user;
                 await _context.SaveChangesAsync();
+
+                return user;
             }
 
             throw new Exception("Incorrect id");
         }
-        public async Task<User> DeleteByIdAsync(int id)
+        public async Task<UserEntity> DeleteByIdAsync(int id)
         {
-            User? user = 
+            UserEntity? user = 
                 await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
 
             if(user != null)
             {
                 _context.Users.Remove(user);
                 await _context.SaveChangesAsync();
+
+                return user;
             }
 
             throw new Exception("Incorrect id");
         }
-        public async Task<bool> ContainsAsync(User user)
-        {
-            user.Password = PasswordHashing.HashPassword(user.Password!);
 
-            User? dbUser = await _context.Users.FirstOrDefaultAsync(
-                u => u.Login == user.Login && 
+        public async Task<bool> ContainsAsync(UserEntity user)
+        {
+            UserEntity? dbUser = 
+                await _context.Users.FirstOrDefaultAsync(u => 
+                u.Login == user.Login && 
                 u.Password == user.Password);
 
             if(dbUser != null)
@@ -90,6 +88,21 @@ namespace DailyPlanner.Repository.Repos
             }
 
             return false;
+        }
+
+        public async Task<UserEntity> GetAsync(UserEntity user)
+        {
+            UserEntity? userEntity =
+                await _context.Users.FirstOrDefaultAsync(u => 
+                u.Login == user.Login &&
+                u.Password == user.Password);
+
+            if(userEntity != null)
+            {
+                return userEntity;
+            }
+
+            throw new Exception("User not found");
         }
     }
 }

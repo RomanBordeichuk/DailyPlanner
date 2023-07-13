@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DailyPlanner.Repository.Interfaces;
 using DailyPlanner.Models;
+using DailyPlanner.Repository.Entitites;
+using DailyPlanner.Repository.Hashing;
 
 namespace DailyPlanner.Controllers
 {
@@ -19,18 +21,24 @@ namespace DailyPlanner.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(User user)
+        public async Task<IActionResult> Index(UserModel userModel)
         {
             if (ModelState.IsValid)
             {
-                if(await _userRepository.ContainsAsync(user))
+                UserEntity userEntity = new(
+                    userModel.UserLogin, 
+                    PasswordHashing.HashPassword(userModel.UserPassword));
+
+                if (await _userRepository.ContainsAsync(userEntity))
                 {
-                    ViewData["ContainsUser"] = true;
+                    userModel.HasUserInDb = true;
+                    userModel.SetUser(await _userRepository.GetAsync(userEntity));
+
                     return Redirect("Main");
                 }
 
-                ViewData["ContainsUser"] = false;
-                return View();
+                userModel.HasUserInDb = false;
+                return View(userModel);
             }
 
             return View();

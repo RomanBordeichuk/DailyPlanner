@@ -1,6 +1,6 @@
 ﻿namespace DailyPlanner.Enums
 {
-    public enum Status
+    public enum DailyTaskStatus
     {
         NotMarked,
         Completed,

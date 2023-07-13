@@ -7,7 +7,7 @@ namespace DailyPlanner.Repository.Interfaces
     {
         string? TaskDescription { get; set; }
         Importance Importance { get; set; }
-        Status Status { get; set; }
+        DailyTaskStatus Status { get; set; }
         public int DailyTasksListId { get; set; }
         DailyTasksListEntity? DailyTasksList { get; set; }
     }

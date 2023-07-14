@@ -1,7 +1,5 @@
 ﻿using DailyPlanner.Models;
-using DailyPlanner.Repository.Entitites;
 using DailyPlanner.Repository.Interfaces;
-using DailyPlanner.StaticClasses;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DailyPlanner.Controllers
@@ -18,18 +16,22 @@ namespace DailyPlanner.Controllers
 
         public async Task<IActionResult> Index(DailyTasksModel dailyTasksModel)
         {
-            await dailyTasksModel.GetFromDbDailyTasksModel(_dailyTasksRepository);
+            dailyTasksModel.DailyTasksRepository = _dailyTasksRepository;
+
+            await dailyTasksModel.GetFromDbDailyTasksModel();
 
             return View(dailyTasksModel);
         }
 
         public async Task<IActionResult> ChangeDate(DailyTasksModel dailyTasksModel)
         {
+            dailyTasksModel.DailyTasksRepository = _dailyTasksRepository;
+
             if (dailyTasksModel.DateChanged())
             {
                 dailyTasksModel.ChangeGlobalDate();
 
-                await dailyTasksModel.GetFromDbDailyTasksModel(_dailyTasksRepository);
+                await dailyTasksModel.GetFromDbDailyTasksModel();
 
                 return Redirect("Index");
             }
@@ -47,25 +49,36 @@ namespace DailyPlanner.Controllers
         {
             if (ModelState.IsValid && dailyTasksModel.CorrectInputData)
             {
-                await dailyTasksModel.GetFromDbDailyTasksList(_dailyTasksRepository);
+                if (!dailyTasksModel.DateChanged())
+                {
+                    dailyTasksModel.DailyTasksRepository = _dailyTasksRepository;
 
-                dailyTasksModel.SetDailyTasksListsToEachDailyTaskObj();
+                    await dailyTasksModel.GetFromDbDailyTasksList();
+                    await dailyTasksModel.SaveDailyTasksToDb();
+                    await dailyTasksModel.GetFromDbDailyTasks();
 
-                await dailyTasksModel.SaveDailyTasksToDb(_dailyTasksRepository);
-                await dailyTasksModel.GetFromDbDailyTasks(_dailyTasksRepository);
+                    dailyTasksModel.ErrorsMessagesList = new();
+                }
+
+                dailyTasksModel.ErrorsMessagesList.Add(
+                    "Cannot save changes to another date");
             }
 
-            return View("Index", dailyTasksModel);
+            return Redirect("Index");
         }
 
         public async Task<IActionResult> DiscardChanges(DailyTasksModel dailyTasksModel)
         {
+            dailyTasksModel.DailyTasksRepository = _dailyTasksRepository;
+
             if (!dailyTasksModel.DateChanged() && dailyTasksModel.CorrectInputData)
             {
-                await dailyTasksModel.GetFromDbDailyTasksModel(_dailyTasksRepository);
+                await dailyTasksModel.GetFromDbDailyTasksModel();
             }
-
-            dailyTasksModel.BackUpToGlobalDate();
+            else
+            {
+                dailyTasksModel.BackUpToGlobalDate();
+            }
 
             return Redirect("Index");
         }
@@ -76,6 +89,7 @@ namespace DailyPlanner.Controllers
 
             return View("Index", dailyTasksModel);
         } 
+
         public IActionResult DropLatestColumn(DailyTasksModel dailyTasksModel)
         {
             if(dailyTasksModel.NumTasks > 0)

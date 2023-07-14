@@ -34,68 +34,6 @@ namespace DailyPlanner.Repository.Repos
             return dailyTask;
         }
 
-        public async Task<DailyTaskEntity> GetByIdAsync(int id)
-        {
-            DailyTaskEntity? dailyTaskEntity =
-                await _context.DailyTasks.FirstOrDefaultAsync(d => d.Id == id);
-
-            if (dailyTaskEntity != null)
-            {
-                return dailyTaskEntity;
-            }
-
-            throw new Exception("Daily Task hand't found");
-        }
-
-        public async Task<List<DailyTaskEntity>> GetAllAsync()
-        {
-            List<DailyTaskEntity> dailyTasks = 
-                await _context.DailyTasks.ToListAsync();
-
-            return dailyTasks;
-        }
-
-        public async Task<List<DailyTaskEntity>> GetAllByDailyTasksListId(
-            int id)
-        {
-            List<DailyTaskEntity> dailyTasks =
-                await _context.DailyTasks.Where(
-                    d => d.DailyTasksListId == id).ToListAsync();
-
-            return dailyTasks;
-        }
-
-        public async Task<DailyTaskEntity> DeleteByIdAsync(int id)
-        {
-            DailyTaskEntity? dailyTask =
-                await _context.DailyTasks.FirstOrDefaultAsync(d => d.Id == id);
-
-            if (dailyTask != null)
-            {
-                _context.DailyTasks.Remove(dailyTask);
-                await _context.SaveChangesAsync();
-                return dailyTask;
-            }
-
-            throw new Exception("Daily Task had't found");
-        }
-
-        public async Task<DailyTaskEntity> UpdateByIdAsync(
-            int id, DailyTaskEntity dailyTask)
-        {
-            DailyTaskEntity? dbDailyTask =
-                await _context.DailyTasks.FirstOrDefaultAsync(d => d.Id == id);
-
-            if (dbDailyTask != null)
-            {
-                dbDailyTask = dailyTask;
-                await _context.SaveChangesAsync();
-                return dailyTask;
-            }
-
-            throw new Exception("Daily Task had't found");
-        }
-
         public async Task<DailyTaskEntity> UpdateAsync(
             DailyTaskEntity oldDailyTask, DailyTaskEntity newDailyTask)
         {
@@ -127,15 +65,6 @@ namespace DailyPlanner.Repository.Repos
             return new();
         }
 
-        public async Task<List<DailyTaskEntity>> AddListAsync(
-            List<DailyTaskEntity> dailyTasks)
-        {
-            await _context.AddRangeAsync(dailyTasks);
-            await _context.SaveChangesAsync();
-
-            return dailyTasks;
-        }
-
         public async Task<DailyTasksListEntity> GetDailyTasksListObj(
             DateOnly date)
         {
@@ -164,27 +93,6 @@ namespace DailyPlanner.Repository.Repos
 
             throw new Exception("User not found");
         } 
-
-        public async Task<DailyTasksListEntity> SaveChangesWithDailyTasksList(
-            DailyTasksListEntity dailyTasksList)
-        {
-            DailyTasksListEntity? dbDailyTasksList = 
-                await _context.DailyTasksLists.FirstOrDefaultAsync(
-                    l => l.Id == dailyTasksList.Id);
-
-            if(dbDailyTasksList != null)
-            {
-                dbDailyTasksList = dailyTasksList;
-            }
-            else
-            {
-                await _context.DailyTasksLists.AddAsync(dailyTasksList);
-            }
-
-            await _context.SaveChangesAsync();
-
-            return dailyTasksList;
-        }
 
         public async Task<DailyTasksListEntity> DeleteDailyTasksList(
             DailyTasksListEntity dailyTasksList)

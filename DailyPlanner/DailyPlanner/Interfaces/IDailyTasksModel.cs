@@ -9,20 +9,20 @@ namespace DailyPlanner.Interfaces
         DateOnly Date { get; set; }
         List<DailyTaskEntity> DailyTasks { get; set; } 
         DailyTasksListEntity DailyTasksList { get; set; }
-        int NumTasks { get; }
-        List<string> ErrorsMessagesList { get; set; }
-
-        string DateString { get; set; }
         bool CorrectInputData { get; set; }
+        List<string> ErrorsMessagesList { get; set; }
+        IDailyTasksRepository? DailyTasksRepository { get; set; }
 
-        Task<DailyTasksModel> GetFromDbDailyTasksModel(
-            IDailyTasksRepository _dailyTasksRepository); 
-        Task<DailyTasksListEntity> GetFromDbDailyTasksList(
-            IDailyTasksRepository _dailyTasksRepository);
-        Task<List<DailyTaskEntity>> GetFromDbDailyTasks(
-            IDailyTasksRepository _dailyTasksRepository);
-        Task<List<DailyTaskEntity>> SaveDailyTasksToDb(
-            IDailyTasksRepository _dailyTasksRepository);
+        int NumTasks { get; }
+        string DateString { get; set; }
+
+        Task<DailyTasksModel> GetFromDbDailyTasksModel(); 
+        Task<DailyTasksListEntity> GetFromDbDailyTasksList();
+        Task<List<DailyTaskEntity>> GetFromDbDailyTasks();
+        Task<List<DailyTaskEntity>> SaveDailyTasksToDb();
+        void ChangeGlobalDate();
+        void BackUpToGlobalDate();
         void SetDailyTasksListsToEachDailyTaskObj();
+        bool DateChanged();
     }
 }

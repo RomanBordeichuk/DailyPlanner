@@ -11,7 +11,9 @@ namespace DailyPlanner.Models
         public DateOnly Date { get; set; } = DateStatic.Date;
         public List<DailyTaskEntity> DailyTasks { get; set; } = new();
         public DailyTasksListEntity DailyTasksList { get; set; } = new();
+        public bool CorrectInputData { get; set; } = true;
         public List<string> ErrorsMessagesList { get; set; } = new();
+        public IDailyTasksRepository? DailyTasksRepository { get; set; }
 
         public int NumTasks { get => DailyTasks.Count; }
         public string DateString
@@ -33,97 +35,70 @@ namespace DailyPlanner.Models
                 }
             }
         }
-        public bool CorrectInputData { get; set; } = true;
 
-        public async Task<DailyTasksModel> GetFromDbDailyTasksModel(
-            IDailyTasksRepository _dailyTasksRepository)
+        public async Task<DailyTasksModel> GetFromDbDailyTasksModel()
         {
-            await GetFromDbDailyTasksList(_dailyTasksRepository);
-            await GetFromDbDailyTasks(_dailyTasksRepository);
-
-            return this;
-        }
-        public async Task<DailyTasksListEntity> GetFromDbDailyTasksList(
-            IDailyTasksRepository _dailyTasksRepository)
-        {
-            DailyTasksList = 
-                await _dailyTasksRepository.GetDailyTasksListObj(Date);
-
-            return DailyTasksList;
-        }
-        public async Task<List<DailyTaskEntity>> GetFromDbDailyTasks(
-            IDailyTasksRepository _dailyTasksRepository)
-        {
-            DailyTasks =
-                await _dailyTasksRepository.GetDailyTasksById(DailyTasksList.Id);
-            SetDailyTasksListsToEachDailyTaskObj();
-
-            return DailyTasks;
-        }
-
-        public async Task<List<DailyTaskEntity>> SaveDailyTasksToDb(
-            IDailyTasksRepository _dailyTasksRepository)
-        {
-            List<DailyTaskEntity> dbDailyTasks =
-                await _dailyTasksRepository.GetAllByDailyTasksListId(
-                    DailyTasksList.Id);
-
-            List<DailyTaskEntity> dailyTasks = DailyTasks;
-
-            for(int i = 0; i < dailyTasks.Count; i++)
+            if(DailyTasksRepository != null)
             {
-                if (dailyTasks[i].TaskDescription == null)
-                {
-                    dailyTasks.Remove(dailyTasks[i]);
-                    i--;
-                }
+                await GetFromDbDailyTasksList();
+                await GetFromDbDailyTasks();
+
+                return this;
             }
 
-            for (int i = 0; i < dailyTasks.Count; i++)
+            throw new Exception("DailyTasksRepository not found");
+        }
+        public async Task<DailyTasksListEntity> GetFromDbDailyTasksList()
+        {
+            if(DailyTasksRepository != null)
             {
-                for (int j = 0; j < dbDailyTasks.Count; j++)
-                {
-                    if (dailyTasks[i].TaskDescription == 
-                        dbDailyTasks[j].TaskDescription 
-                        &&
-                        dailyTasks[i].Importance == 
-                        dbDailyTasks[j].Importance 
-                        &&
-                        dailyTasks[i].Status ==
-                        dbDailyTasks[j].Status)
-                    {
-                        dailyTasks.Remove(dailyTasks[i]);
-                        dbDailyTasks.Remove(dbDailyTasks[j]);
+                DailyTasksList =
+                    await DailyTasksRepository.GetDailyTasksListObj(Date);
 
-                        i--; j--;
-                        break;
-                    }
-                }
+                return DailyTasksList;
             }
 
-            while (dailyTasks.Count > 0 || dbDailyTasks!.Count > 0)
+            throw new Exception("DailyTasksRepository not found");
+        }
+        public async Task<List<DailyTaskEntity>> GetFromDbDailyTasks()
+        {
+            if(DailyTasksRepository != null)
             {
-                if(dailyTasks.Count > 0 && dbDailyTasks.Count > 0)
-                {
-                    await _dailyTasksRepository.UpdateAsync(
-                        dbDailyTasks[0], dailyTasks[0]);
+                DailyTasks =
+                    await DailyTasksRepository.GetDailyTasksById(DailyTasksList.Id);
+                SetDailyTasksListsToEachDailyTaskObj();
 
-                    dailyTasks.Remove(dailyTasks[0]);
-                    dbDailyTasks.Remove(dbDailyTasks[0]);
-                }
-                else if(dailyTasks.Count > 0)
-                {
-                    await _dailyTasksRepository.AddAsync(dailyTasks[0]);
-                    dailyTasks.Remove(dailyTasks[0]);
-                }
-                else
-                {
-                    await _dailyTasksRepository.DeleteAsync(dbDailyTasks[0]);
-                    dbDailyTasks.Remove(dbDailyTasks[0]);
-                }
+                return DailyTasks;
             }
 
-            return DailyTasks;
+            throw new Exception("DailyTasksRepository not found");
+        }
+        public async Task<List<DailyTaskEntity>> SaveDailyTasksToDb()
+        {
+            if(DailyTasksRepository != null)
+            {
+                SetDailyTasksListsToEachDailyTaskObj();
+
+                List<DailyTaskEntity> dbDailyTasks =
+                    await DailyTasksRepository.GetDailyTasksById(
+                        DailyTasksList.Id);
+
+                List<DailyTaskEntity> dailyTasks = DailyTasks;
+
+                dbDailyTasks = DeleteEmptyFieldsFromDailyTasks(dbDailyTasks);
+                dailyTasks = DeleteEmptyFieldsFromDailyTasks(dailyTasks);
+
+                await DeleteEmptyDailyTasksListIfNeeded(dailyTasks);
+
+                (dbDailyTasks, dailyTasks) = DeleteEqualFieldsFromTwoDailyTaskLists(
+                    dbDailyTasks, dailyTasks);
+
+                await SaveChangesWithDailyTasksToDb(dbDailyTasks, dailyTasks);
+
+                return DailyTasks;
+            }
+
+            throw new Exception("DailyTasksRepository not found");
         }
 
         public void ChangeGlobalDate()
@@ -153,6 +128,99 @@ namespace DailyPlanner.Models
             {
                 return false;
             }
+        }
+
+        private List<DailyTaskEntity> DeleteEmptyFieldsFromDailyTasks(
+            List<DailyTaskEntity> dailyTasks)
+        {
+            for (int i = 0; i < dailyTasks.Count; i++)
+            {
+                if (dailyTasks[i].TaskDescription == null)
+                {
+                    dailyTasks.Remove(dailyTasks[i]);
+                    i--;
+                }
+            }
+
+            return dailyTasks;
+        }
+        private (List<DailyTaskEntity>, List<DailyTaskEntity>) 
+            DeleteEqualFieldsFromTwoDailyTaskLists(
+            List<DailyTaskEntity> firstList, List<DailyTaskEntity> secondList)
+        {
+            for (int i = 0; i < firstList.Count; i++)
+            {
+                for (int j = 0; j < secondList.Count; j++)
+                {
+                    if (firstList[i].TaskDescription ==
+                        secondList[j].TaskDescription
+                        &&
+                        firstList[i].Importance ==
+                        secondList[j].Importance
+                        &&
+                        firstList[i].Status ==
+                        secondList[j].Status)
+                    {
+                        firstList.Remove(firstList[i]);
+                        secondList.Remove(secondList[j]);
+
+                        i--; j--;
+                        break;
+                    }
+                }
+            }
+
+            return (firstList, secondList);
+        }
+
+        private async Task<bool> SaveChangesWithDailyTasksToDb(
+            List<DailyTaskEntity> dbDailyTasks, List<DailyTaskEntity> dailyTasks)
+        {
+            if(DailyTasksRepository != null)
+            {
+                while (dailyTasks.Count > 0 || dbDailyTasks!.Count > 0)
+                {
+                    if (dailyTasks.Count > 0 && dbDailyTasks.Count > 0)
+                    {
+                        await DailyTasksRepository.UpdateAsync(
+                            dbDailyTasks[0], dailyTasks[0]);
+
+                        dailyTasks.Remove(dailyTasks[0]);
+                        dbDailyTasks.Remove(dbDailyTasks[0]);
+                    }
+                    else if (dailyTasks.Count > 0)
+                    {
+                        await DailyTasksRepository.AddAsync(dailyTasks[0]);
+                        dailyTasks.Remove(dailyTasks[0]);
+                    }
+                    else
+                    {
+                        await DailyTasksRepository.DeleteAsync(dbDailyTasks[0]);
+                        dbDailyTasks.Remove(dbDailyTasks[0]);
+                    }
+                }
+
+                return true;
+            }
+
+            throw new Exception("DailyTasksRepository not found");
+        }
+        private async Task<bool> DeleteEmptyDailyTasksListIfNeeded(
+            List<DailyTaskEntity> dailyTasks)
+        {
+            if(dailyTasks == null)
+            {
+                if(DailyTasksRepository != null)
+                {
+                    await DailyTasksRepository.DeleteDailyTasksList(DailyTasksList);
+
+                    return true;
+                }
+
+                throw new Exception("DailyTasksRepository not found");
+            }
+
+            return false;
         }
     }
 }

@@ -7,7 +7,7 @@ namespace DailyPlanner.Repository.Repos
     {
         public Task<GeneralTaskEntity> AddAsync(GeneralTaskEntity entity)
         {
-            throw new NotImplementedException();
+            throw new Exception("asd");
         }
 
         public Task<GeneralTaskEntity> DeleteByIdAsync(int id)

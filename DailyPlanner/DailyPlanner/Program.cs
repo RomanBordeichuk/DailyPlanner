@@ -14,6 +14,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IDailyTasksRepository, DailyTasksRepository>();
+builder.Services.AddScoped<IGeneralTasksRepository, GeneralTasksRepository>();
 
 var app = builder.Build();
 

@@ -24,7 +24,8 @@ namespace DailyPlanner.Models
                 try
                 {
                     string[] date = value.Split(".");
-                    Date = new(Convert.ToInt32(date[2]),
+                    Date = new(
+                        Convert.ToInt32(date[2]),
                         Convert.ToInt32(date[1]),
                         Convert.ToInt32(date[0]));
                 }

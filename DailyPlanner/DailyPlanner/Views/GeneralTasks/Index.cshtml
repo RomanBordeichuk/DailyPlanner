@@ -1,3 +1,6 @@
+@using DailyPlanner.Models
+
+@model GeneralTasksModel
 @{
     ViewData["Title"] = "General Tasks";
 }
@@ -5,3 +8,41 @@
 <h1>General Tasks</h1>
 
 <a asp-controller="Main" asp-action="Index">Back to Main</a>
+
+<form method="post" asp-controller="GeneralTasks" asp-action="SaveTasks">
+    <div>
+        <input type="text" asp-for="DateString">
+    </div>
+    <div>
+        @foreach(string error in Model.ErrorMessagesList){
+            <span>@error</span><br>
+        }
+    </div>
+    <div>
+        <button type="submit">Save</button>
+        <button asp-controller="GeneralTasks" asp-action="DiscardChanges">
+            Discard changes
+        </button>
+    </div>
+    <div>
+    @for(int i = 0; i < Model.NumTasks; i++){
+        <div>
+            <textarea cols="30" rows="10" 
+                asp-for="GeneralTasks[i].TaskDescription"></textarea>
+            <select asp-for="GeneralTasks[i].Status">
+                <option value="InProcess">InProcess</option>
+                <option value="Completed">Completed</option>
+            </select>
+            <input type="text" asp-for="GeneralTasks[i].DeadLineString">
+        </div>
+    }
+    </div>
+    <div>
+        <button asp-controller="GeneralTasks" asp-action="AddColumn">
+            Add new Column
+        </button>
+        <button asp-controller="GeneralTasks" asp-action="DeleteColumn">
+            Delete Column
+        </button>
+    </div>
+</form>

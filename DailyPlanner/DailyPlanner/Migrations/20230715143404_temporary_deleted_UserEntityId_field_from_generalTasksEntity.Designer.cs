@@ -4,6 +4,7 @@ using DailyPlanner.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DailyPlanner.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230715143404_temporary_deleted_UserEntityId_field_from_generalTasksEntity")]
+    partial class temporary_deleted_UserEntityId_field_from_generalTasksEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -79,10 +82,10 @@ namespace DailyPlanner.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("DeadLine")
-                        .HasColumnType("Date");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("ExecutionDate")
-                        .HasColumnType("Date");
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -90,7 +93,7 @@ namespace DailyPlanner.Migrations
                     b.Property<string>("TaskDescription")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserEntityId")
+                    b.Property<int?>("UserEntityId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -147,9 +150,7 @@ namespace DailyPlanner.Migrations
                 {
                     b.HasOne("DailyPlanner.Repository.Entitites.UserEntity", "UserEntity")
                         .WithMany("GeneralTasks")
-                        .HasForeignKey("UserEntityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserEntityId");
 
                     b.Navigation("UserEntity");
                 });

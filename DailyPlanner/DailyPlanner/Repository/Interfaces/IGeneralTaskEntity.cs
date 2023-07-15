@@ -16,5 +16,8 @@ namespace DailyPlanner.Repository.Interfaces
         DateTime ExecutionDate { get; set; }
         int UserEntityId { get; set; }
         UserEntity? UserEntity { get; set; }
+
+        bool CorrectDeadLine { get; set; }
+        string DeadLineString { get; set; }
     }
 }

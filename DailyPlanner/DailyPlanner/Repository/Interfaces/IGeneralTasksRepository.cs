@@ -2,8 +2,7 @@
 
 namespace DailyPlanner.Repository.Interfaces
 {
-    public interface IGeneralTasksRepository : 
-        IBaseRepository<GeneralTaskEntity>
+    public interface IGeneralTasksRepository : IBaseRepository
     {
 
     }

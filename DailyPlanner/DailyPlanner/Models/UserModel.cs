@@ -1,5 +1,4 @@
-﻿using DailyPlanner.Interfaces;
-using DailyPlanner.Repository.Entitites;
+﻿using DailyPlanner.Repository.Entitites;
 using DailyPlanner.Repository.Hashing;
 using DailyPlanner.Repository.Interfaces;
 using DailyPlanner.StaticClasses;
@@ -7,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DailyPlanner.Models
 {
-    public class UserModel : IUserModel
+    public class UserModel
     {
         [Required]
         [MinLength(3, ErrorMessage = 

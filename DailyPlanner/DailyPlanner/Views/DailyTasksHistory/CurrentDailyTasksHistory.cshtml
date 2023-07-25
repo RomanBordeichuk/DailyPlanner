@@ -1,0 +1,41 @@
+@using DailyPlanner.Models
+
+@model DailyTasksHistoryModel
+@{
+    ViewData["Title"] = "Current Daily Tasks History";
+}
+
+<h1>Current Daily Tasks History</h1>
+
+<a asp-controller="Main" asp-action="Index">Back to Main</a><br>
+<a asp-controller="DailyTasksHistory" asp-action="Index">Daily Tasks History</a><br>
+
+<div>
+    <span>Date: </span>
+    <span>
+        @Model.CurrentDate.Day @Model.GetMonthName(Model.CurrentDate.Month)
+        @Model.CurrentDate.Year
+    </span>
+</div>
+
+<form method="post" asp-controller="DailyTasksHistory" 
+    asp-action="CurrentDailyTasksHistory">
+    <div>
+    @for(int i = 0; i < Model.CurrentDailyTasks.Count; i++){
+        <div>
+            <textarea cols="30" rows="10"
+                asp-for="CurrentDailyTasks[i].TaskDescription"></textarea>
+            <select asp-for="CurrentDailyTasks[i].Importance">
+                <option value="Important">Important</option>
+                <option value="Optional">Optional</option>
+            </select>
+            <select asp-for="CurrentDailyTasks[i].Status">
+                <option value="NotMarked"></option>
+                <option value="Completed">Completed</option>
+                <option value="PartlyCompleted">PartlyCompleted</option>
+                <option value="NotStarted">NotStarted</option>
+            </select>
+        </div>
+    }
+    </div>
+</form>

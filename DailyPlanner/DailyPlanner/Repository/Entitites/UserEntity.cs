@@ -1,8 +1,6 @@
-﻿using DailyPlanner.Repository.Interfaces;
-
-namespace DailyPlanner.Repository.Entitites
+﻿namespace DailyPlanner.Repository.Entitites
 {
-    public class UserEntity : IUserEntity
+    public class UserEntity
     {
         public int Id { get; set; }
         public string Login { get; set; } = null!;

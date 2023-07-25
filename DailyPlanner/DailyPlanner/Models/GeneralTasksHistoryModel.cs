@@ -1,32 +1,17 @@
-﻿using DailyPlanner.Interfaces;
-using DailyPlanner.Repository.Entitites;
+﻿using DailyPlanner.Repository.Entitites;
 using DailyPlanner.Repository.Interfaces;
 using DailyPlanner.StaticClasses;
 
 namespace DailyPlanner.Models
 {
-    public class GeneralTasksHistoryModel : IGeneralTasksHistoryModel
+    public class GeneralTasksHistoryModel
     {
         public List<(int, int)> MonthDatesList { get; set; } = new();
-        public (int, int) CurrentMonthNum { get; set; } = CurrentMonthStatic.CurrentMonth;
+        public (int, int) CurrentMonthNum { get; set; } = ChosenDateStatic.ChosenMonth;
         public List<GeneralTaskEntity> CurrentMonthTasksList { get; set; } = new();
         public bool CorrectInputData { get; set; } = true;
         public List<string> ErrorMessagesList { get; set; } = new();
         public IGeneralTasksRepository? GeneralTasksRepository { get; set; }
-
-        public int NumMonthDates { get => MonthDatesList.Count; }
-        public int NumCurrentMonthTasks
-        {
-            get
-            {
-                if (CurrentMonthTasksList != null)
-                {
-                    return CurrentMonthTasksList.Count;
-                }
-
-                return 0;
-            }
-        }
         public string CurrentMonthString
         {
             get => CurrentMonthNum.Item1 + "." + CurrentMonthNum.Item2; 
@@ -37,7 +22,7 @@ namespace DailyPlanner.Models
                 CurrentMonthNum = 
                     (Convert.ToInt32(numsMas[0]), Convert.ToInt32(numsMas[1]));
 
-                CurrentMonthStatic.CurrentMonth = CurrentMonthNum;
+                ChosenDateStatic.ChosenMonth = CurrentMonthNum;
             }
         }
 
@@ -85,6 +70,8 @@ namespace DailyPlanner.Models
                 await GeneralTasksRepository.GetDatesList();
 
             MonthDatesList = CreateMonthDatesList(datesList);
+
+            MonthDatesList.Reverse();
 
             return MonthDatesList;
         }

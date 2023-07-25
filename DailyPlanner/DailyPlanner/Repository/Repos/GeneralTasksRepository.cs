@@ -99,7 +99,7 @@ namespace DailyPlanner.Repository.Repos
                 throw new Exception("User not found");
             }
 
-            List<DateOnly> monthDatesList =
+            List<DateOnly>? monthDatesList =
                 await _context.GeneralTasks.Where(g =>
                     g.UserEntityId == CurrentUserStatic.User.Id).Select(g =>
                         new DateOnly(
@@ -107,7 +107,12 @@ namespace DailyPlanner.Repository.Repos
                             g.ExecutionDate.Month,
                             g.ExecutionDate.Day)).ToListAsync();
 
-            return monthDatesList;
+            if(monthDatesList != null)
+            {
+                return monthDatesList;
+            }
+
+            return new();
         }
 
         public async Task<List<GeneralTaskEntity>> GetGeneralTasksByExecutionDateMonth(

@@ -10,7 +10,8 @@
 <a asp-controller="Main" asp-action="Index">Back to Main</a><br>
 <a asp-controller="GeneralTasks" asp-action="Index">General Tasks</a><br>
 
-<form method="post" asp-controller="GeneralTasksHistory" asp-action="SaveChangedTasks">
+<form method="post" asp-controller="GeneralTasksHistory" 
+    asp-action="MonthGeneralTasksHistory">
     <input id="currentMonthInput" style="display: none;" 
         asp-for="CurrentMonthString" type="text">
         

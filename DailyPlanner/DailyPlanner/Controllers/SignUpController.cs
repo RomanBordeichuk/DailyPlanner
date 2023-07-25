@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using DailyPlanner.Repository.Interfaces;
 using DailyPlanner.Models;
+using DailyPlanner.Repository.Interfaces;
 
 namespace DailyPlanner.Controllers
 {

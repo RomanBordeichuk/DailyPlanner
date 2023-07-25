@@ -2,6 +2,7 @@
 using DailyPlanner.Repository.Interfaces;
 using DailyPlanner.StaticClasses;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace DailyPlanner.Repository.Repos
 {
@@ -65,7 +66,7 @@ namespace DailyPlanner.Repository.Repos
             return new();
         }
 
-        public async Task<DailyTasksListEntity> GetDailyTasksListObj(
+        public async Task<DailyTasksListEntity> GetDailyTasksListObjByDate(
             DateOnly date)
         {
             if (CurrentUserStatic.User != null)
@@ -122,6 +123,42 @@ namespace DailyPlanner.Repository.Repos
                     new()
                 };
             }
+        }
+
+        public async Task<List<DateOnly>> GetDailyTasksDays()
+        {
+            if(CurrentUserStatic.User == null)
+            {
+                throw new Exception("User not found");
+            }
+
+            List<DateOnly>? daysList = await _context.DailyTasksLists.Where(l =>
+                l.UserEntityId == CurrentUserStatic.User.Id).OrderBy(l => l.Date).Select(l => 
+                    new DateOnly(
+                        l.Date.Year, 
+                        l.Date.Month,
+                        l.Date.Day)).ToListAsync();
+
+            if(daysList != null)
+            {
+                return daysList;
+            }
+
+            return new();
+        }
+
+        public async Task<List<DailyTaskEntity>> GetDailyTasksByListId(int listId)
+        {
+            List<DailyTaskEntity>? currentDailyTasks =
+                await _context.DailyTasks.Where(d => 
+                d.DailyTasksListId == listId).ToListAsync();
+
+            if(currentDailyTasks != null)
+            {
+                return currentDailyTasks;
+            }
+
+            return new();
         }
     }
 }

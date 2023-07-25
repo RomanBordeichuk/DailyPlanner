@@ -1,12 +1,10 @@
-﻿using DailyPlanner.Interfaces;
-using DailyPlanner.Repository.Entitites;
+﻿using DailyPlanner.Repository.Entitites;
 using DailyPlanner.Repository.Interfaces;
-using DailyPlanner.Repository.Repos;
 using DailyPlanner.StaticClasses;
 
 namespace DailyPlanner.Models
 {
-    public class DailyTasksModel : IDailyTasksModel
+    public class DailyTasksModel
     {
         public DateOnly Date { get; set; } = DateStatic.Date;
         public List<DailyTaskEntity> DailyTasks { get; set; } = new();
@@ -54,7 +52,7 @@ namespace DailyPlanner.Models
             if(DailyTasksRepository != null)
             {
                 DailyTasksList =
-                    await DailyTasksRepository.GetDailyTasksListObj(Date);
+                    await DailyTasksRepository.GetDailyTasksListObjByDate(Date);
 
                 return DailyTasksList;
             }

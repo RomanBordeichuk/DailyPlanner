@@ -9,5 +9,8 @@ namespace DailyPlanner.Repository.Interfaces
         Task<GeneralTaskEntity> UpdateAsync(
             GeneralTaskEntity oldGeneralTask, GeneralTaskEntity newGeneralTask);
         Task<GeneralTaskEntity> DeleteAsync(GeneralTaskEntity generalTask);
+        Task<List<DateOnly>> GetDatesList();
+        Task<List<GeneralTaskEntity>> GetGeneralTasksByExecutionDateMonth(
+            int month, int year);
     }
 }

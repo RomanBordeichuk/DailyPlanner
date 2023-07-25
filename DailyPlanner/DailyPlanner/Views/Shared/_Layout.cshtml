@@ -8,5 +8,15 @@
 </head>
 <body>
     @RenderBody()
+
+    <script>
+        function setCurrentMonthTasksList(month, year){
+            const currentMonthInput = document.getElementById("currentMonthInput");
+            const submitButton = document.getElementById("submitButton");
+
+            currentMonthInput.value = month + "." + year;
+            submitButton.submit();
+        }
+    </script>
 </body>
 </html>

@@ -1,0 +1,51 @@
+@using DailyPlanner.Models
+
+@model GeneralTasksHistoryModel
+@{
+    ViewData["Title"] = "Month General Tasks History";
+}
+
+<h1>Month General Tasks History</h1>
+
+<a asp-controller="Main" asp-action="Index">Back to Main</a><br>
+<a asp-controller="GeneralTasks" asp-action="Index">General Tasks</a><br>
+<a asp-controller="GeneralTasksHistory" asp-action="Index">General Tasks History</a><br>
+
+<form method="post" asp-controller="GeneralTasksHistory" 
+    asp-action="SaveChanges">
+    <div>
+        <span>Month: </span>
+        <span>
+            @Model.GetMonthName(Model.CurrentMonthNum.Item1) 
+            @Model.CurrentMonthNum.Item2
+        </span>
+    </div>
+    <div>
+        <button type="submit">Save Changes</button>
+        <button asp-controller="GeneralTasksHistory" 
+            asp-action="DiscardChanges">
+            Discard Changes
+        </button>
+    </div>
+    <div>
+        @foreach(string error in Model.ErrorMessagesList){
+            <span>@error</span><br>
+        }
+    </div>
+    <div>
+    @if(Model.CurrentMonthTasksList != null){
+        @for(int i = 0; i < Model.CurrentMonthTasksList.Count; i++){
+        <div>
+            <textarea cols="30" rows="10" 
+                asp-for="CurrentMonthTasksList[i].TaskDescription"></textarea>
+            <select asp-for="CurrentMonthTasksList[i].Status">
+                <option value="InProcess">InProcess</option>
+                <option value="Completed">Completed</option>
+            </select>
+            <input type="text" asp-for="CurrentMonthTasksList[i].DeadLineString">
+            <input type="text" asp-for="CurrentMonthTasksList[i].ExecutionDateString">
+        </div>
+        }
+    }
+    </div>
+</form>

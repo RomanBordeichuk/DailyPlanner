@@ -91,5 +91,52 @@ namespace DailyPlanner.Repository.Repos
 
             throw new Exception("GeneralTaskEntity not found");
         }
+
+        public async Task<List<DateOnly>> GetDatesList()
+        {
+            if (CurrentUserStatic.User == null)
+            {
+                throw new Exception("User not found");
+            }
+
+            List<DateOnly> monthDatesList =
+                await _context.GeneralTasks.Where(g =>
+                    g.UserEntityId == CurrentUserStatic.User.Id).Select(g =>
+                        new DateOnly(
+                            g.ExecutionDate.Year,
+                            g.ExecutionDate.Month,
+                            g.ExecutionDate.Day)).ToListAsync();
+
+            return monthDatesList;
+        }
+
+        public async Task<List<GeneralTaskEntity>> GetGeneralTasksByExecutionDateMonth(
+            int month, int year)
+        {
+            if(CurrentUserStatic.User == null)
+            {
+                throw new Exception("User not found");
+            }
+
+            List<GeneralTaskEntity>? generalTasksList =
+                await _context.GeneralTasks.Where(g => 
+                    g.UserEntityId == CurrentUserStatic.User.Id &&
+                    g.ExecutionDate.Month == month &&
+                    g.ExecutionDate.Year == year).ToListAsync();
+
+            if(generalTasksList != null)
+            {
+                return generalTasksList;
+            }
+
+            return new()
+            {
+                new(),
+                new(),
+                new(),
+                new(),
+                new()
+            };
+        }
     }
 }

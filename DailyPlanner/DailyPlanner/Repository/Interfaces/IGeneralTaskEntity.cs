@@ -18,6 +18,9 @@ namespace DailyPlanner.Repository.Interfaces
         UserEntity? UserEntity { get; set; }
 
         bool CorrectDeadLine { get; set; }
+        bool CorrectExecutionDate { get; set; }
+
         string DeadLineString { get; set; }
+        string ExecutionDateString { get; set; }
     }
 }

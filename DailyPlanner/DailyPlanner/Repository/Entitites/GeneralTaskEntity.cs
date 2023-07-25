@@ -21,6 +21,9 @@ namespace DailyPlanner.Repository.Entitites
         [NotMapped]
         public bool CorrectDeadLine { get; set; } = true;
         [NotMapped]
+        public bool CorrectExecutionDate { get; set; } = true;
+
+        [NotMapped]
         public string DeadLineString
         {
             get
@@ -51,6 +54,44 @@ namespace DailyPlanner.Repository.Entitites
                 catch
                 {
                     CorrectDeadLine = false;
+                }
+            }
+        }
+
+        [NotMapped]
+        public string ExecutionDateString
+        {
+            get
+            {
+                if (ExecutionDate == new DateTime())
+                {
+                    return "Not executed yet";
+                }
+
+                return new DateOnly(
+                    ExecutionDate.Year, 
+                    ExecutionDate.Month, 
+                    ExecutionDate.Day).ToString();
+            }
+            set
+            {
+                if (value == "Not executed yet")
+                {
+                    ExecutionDate = new();
+                    return;
+                }
+
+                try
+                {
+                    string[] date = value.Split(".");
+                    ExecutionDate = new(
+                        Convert.ToInt32(date[2]),
+                        Convert.ToInt32(date[1]),
+                        Convert.ToInt32(date[0]));
+                }
+                catch
+                {
+                    CorrectExecutionDate = false;
                 }
             }
         }

@@ -63,7 +63,6 @@ namespace DailyPlanner.Models
                 List<GeneralTaskEntity> generalTasks = GeneralTasks;
 
                 generalTasks = DeleteFieldsWithEmptyTaskDescription(generalTasks);
-                dbGeneralTasks = DeleteFieldsWithEmptyTaskDescription(dbGeneralTasks);
 
                 (dbGeneralTasks, generalTasks) = DeleteEqualFieldsFromTwoGeneralTasksLists(
                     dbGeneralTasks, generalTasks);

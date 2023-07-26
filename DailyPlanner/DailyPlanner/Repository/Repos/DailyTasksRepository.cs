@@ -45,7 +45,6 @@ namespace DailyPlanner.Repository.Repos
             dbDailyTask.TaskDescription = newDailyTask.TaskDescription;
             dbDailyTask.Importance = newDailyTask.Importance;
             dbDailyTask.Status = newDailyTask.Status;
-            dbDailyTask.DailyTasksList = newDailyTask.DailyTasksList;
 
             await _context.SaveChangesAsync();
 

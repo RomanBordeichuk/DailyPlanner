@@ -1,6 +1,7 @@
 ﻿using DailyPlanner.Repository.Entitites;
 using DailyPlanner.Repository.Interfaces;
 using DailyPlanner.StaticClasses;
+using XAct;
 
 namespace DailyPlanner.Models
 {
@@ -97,8 +98,6 @@ namespace DailyPlanner.Models
                 throw new Exception("GeneralTasksRepository not found");
             }
 
-            SetUserEntityIdToEachGeneralTask();
-
             List<GeneralTaskEntity> dbGeneralTasks =
                 await GeneralTasksRepository.GetGeneralTasksByExecutionDateMonth(
                     CurrentMonthNum.Item1, CurrentMonthNum.Item2);
@@ -142,6 +141,29 @@ namespace DailyPlanner.Models
             }
 
             return true;
+        }
+
+        public void CheckGeneralTasksInputData()
+        {
+            foreach(GeneralTaskEntity generalTask in CurrentMonthTasksList)
+            {
+                if(!generalTask.CorrectDeadLine)
+                {
+                    CorrectInputData = false;
+                    ErrorMessagesList.Add("Some deadline dates are incorrect");
+                    break;
+                }
+            }
+
+            foreach (GeneralTaskEntity generalTask in CurrentMonthTasksList)
+            {
+                if (!generalTask.CorrectExecutionDate)
+                {
+                    CorrectInputData = false;
+                    ErrorMessagesList.Add("Some execution dates are incorrect");
+                    break;
+                }
+            }
         }
         private List<(int, int)> CreateMonthDatesList(
             List<DateOnly> datesList)
@@ -188,20 +210,6 @@ namespace DailyPlanner.Models
             }
 
             return (dbGeneralTasks, generalTasks);
-        }
-        private void SetUserEntityIdToEachGeneralTask()
-        {
-            if (CurrentUserStatic.User != null)
-            {
-                foreach (GeneralTaskEntity generalTask in CurrentMonthTasksList)
-                {
-                    generalTask.UserEntityId = CurrentUserStatic.User.Id;
-                }
-
-                return;
-            }
-
-            throw new Exception("User not found");
         }
         private List<GeneralTaskEntity> DeleteFieldsWithEmptyTaskDescription(
             List<GeneralTaskEntity> generalTasks)

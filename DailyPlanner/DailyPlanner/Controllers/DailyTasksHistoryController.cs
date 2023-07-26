@@ -35,5 +35,26 @@ namespace DailyPlanner.Controllers
 
             return View(dailyTasksHistoryModel);
         }
+
+        public async Task<IActionResult> SaveChanges(
+            DailyTasksHistoryModel dailyTasksHistoryModel)
+        {
+            dailyTasksHistoryModel.DailyTasksRepository = _dailyTasksRepository;
+
+            if(ModelState.IsValid && dailyTasksHistoryModel.CorrectInputData)
+            {
+                await dailyTasksHistoryModel.GetFromDbCurrentDailyTasksList();
+                await dailyTasksHistoryModel.SaveChangesWithDailyTasks();
+                await dailyTasksHistoryModel.GetFromDbCurrentDailyTasks();
+            }
+
+            return View("CurrentDailyTasksHistory", dailyTasksHistoryModel);
+        }
+
+        public IActionResult DiscardChanges(
+            DailyTasksHistoryModel dailyTasksHistoryModel)
+        {
+            return Redirect("CurrentDailyTasksHistory");
+        }
     }
 }

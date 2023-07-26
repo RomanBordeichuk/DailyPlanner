@@ -7,5 +7,7 @@ namespace DailyPlanner.Repository.Interfaces
         Task<UserEntity> AddAsync(UserEntity user);
         Task<bool> ContainsAsync(UserEntity user);
         Task<UserEntity> GetAsync(UserEntity user);
+        Task<string> GetMotivationalQuoteByUserId(int userId);
+        Task<string> UpdateQuoteById(int userId, string quote);
     }
 }

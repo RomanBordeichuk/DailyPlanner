@@ -50,5 +50,35 @@ namespace DailyPlanner.Repository.Repos
 
             throw new Exception("User not found");
         }
+
+        public async Task<string> GetMotivationalQuoteByUserId(int userId)
+        {
+            UserEntity? dbUser =
+                await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+
+            if(dbUser == null)
+            {
+                throw new Exception("dbUser not found");
+            }
+
+            return dbUser.MotivationalQuote;
+        }
+
+        public async Task<string> UpdateQuoteById(int userId, string quote)
+        {
+            UserEntity? dbUser = 
+                await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+
+            if(dbUser == null)
+            {
+                throw new Exception("dbUser not found");
+            }
+
+            dbUser.MotivationalQuote = quote;
+
+            await _context.SaveChangesAsync();
+
+            return quote;
+        }
     }
 }

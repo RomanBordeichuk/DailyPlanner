@@ -1,3 +1,6 @@
+@using DailyPlanner.Models
+
+@model MainModel
 @{
     ViewData["Title"] = "Main";
 }
@@ -9,3 +12,21 @@
 <a asp-controller="DailyTasksHistory" asp-action="Index">Daily Tasks History</a><br>
 <a asp-controller="GeneralTasks" asp-action="Index">General Tasks</a><br>
 <a asp-controller="GeneralTasksHistory" asp-action="Index">General Tasks History</a><br>
+
+<div>
+    <h2>@Model.Login</h2>
+</div>
+
+<form method="post" asp-controller="Main" asp-action="SaveChanges">
+    <div>
+        <button>Sava Changed Quote</button>
+        <textarea cols="30" rows="10" asp-for="MotivationalQuote"></textarea>
+    </div>
+</form>
+
+<div>
+    <span>Closes Task:</span><br>
+    <span>@Model.ClosesGeneralTask.TaskDescription</span><br>
+    <span>@Model.ClosesGeneralTask.DeadLineString</span><br>
+    <span>@Model.ClosesGeneralTask.ExecutionDateString</span>
+</div>

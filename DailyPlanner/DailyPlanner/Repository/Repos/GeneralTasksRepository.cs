@@ -143,5 +143,29 @@ namespace DailyPlanner.Repository.Repos
                 new()
             };
         }
+
+        public async Task<GeneralTaskEntity> GetClosesGeneralTaskByUserId(int userId)
+        {
+            List<GeneralTaskEntity>? orderedGeneralTasksList =
+                await _context.GeneralTasks.Where(g => 
+                    g.UserEntityId == userId &&
+                    g.Status == GeneralTaskStatus.InProcess).OrderBy(g => 
+                        g.DeadLine).ToListAsync();
+
+            if(orderedGeneralTasksList == null)
+            {
+                return new();
+            }
+
+            foreach(GeneralTaskEntity generalTask in orderedGeneralTasksList)
+            {
+                if(!(generalTask.DeadLine == new DateTime()))
+                {
+                    return generalTask;
+                }
+            }
+
+            return orderedGeneralTasksList[0];
+        }
     }
 }

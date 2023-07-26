@@ -18,8 +18,13 @@
     </span>
 </div>
 
-<form method="post" asp-controller="DailyTasksHistory" 
-    asp-action="CurrentDailyTasksHistory">
+<form method="post" asp-controller="DailyTasksHistory" asp-action="SaveChanges">
+    <div>
+        <button>Save Changes</button>
+        <button asp-controller="DailyTasksHistory" asp-action="DiscardChanges"> 
+            Discard Changes
+        </button>
+    </div>
     <div>
     @for(int i = 0; i < Model.CurrentDailyTasks.Count; i++){
         <div>

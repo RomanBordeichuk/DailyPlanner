@@ -1,5 +1,6 @@
 ﻿using DailyPlanner.Repository.Entitites;
 using DailyPlanner.Repository.Interfaces;
+using DailyPlanner.Repository.Repos;
 using DailyPlanner.StaticClasses;
 using XAct;
 
@@ -12,6 +13,8 @@ namespace DailyPlanner.Models
         public DailyTasksListEntity? CurrentDailyTasksList { get; set; }
         public List<DailyTaskEntity> CurrentDailyTasks { get; set; } = new();
 
+        public bool CorrectInputData { get; set; } = true;
+        public List<string> ErrorMessagesList { get; set; } = new();
         public IDailyTasksRepository? DailyTasksRepository { get; set; }
         public string CurrentDateString
         {
@@ -132,6 +135,105 @@ namespace DailyPlanner.Models
                 await DailyTasksRepository.GetDailyTasksByListId(CurrentDailyTasksList.Id);
 
             return CurrentDailyTasks;
+        }
+
+        public async Task<bool> SaveChangesWithDailyTasks()
+        {
+            if(DailyTasksRepository == null)
+            {
+                throw new Exception("DailyTasksRepository not found");
+            }
+            if(CurrentDailyTasksList == null)
+            {
+                throw new Exception("CurrentDailyTasksList not found");
+            }
+
+            List<DailyTaskEntity> dbDailyTasks =
+                await DailyTasksRepository.GetDailyTasksByListId(CurrentDailyTasksList.Id);
+
+            List<DailyTaskEntity> dailyTasks = CurrentDailyTasks;
+
+            dailyTasks = DeleteFieldsWithEmptyTaskDescription(dailyTasks);
+
+            (dbDailyTasks, dailyTasks) = DeleteEqualFieldsFromTwoDailyTasksLists(
+                dbDailyTasks, dailyTasks);
+
+            await SaveChangesWithDailyTasksToDb(dbDailyTasks, dailyTasks);
+
+            return true;
+        }
+
+        private async Task<bool> SaveChangesWithDailyTasksToDb(
+            List<DailyTaskEntity> dbDailyTasks,
+            List<DailyTaskEntity> dailyTasks)
+        {
+            if (DailyTasksRepository == null)
+            {
+                throw new Exception("DailyTasksRepository not found");
+            }
+
+            while (dbDailyTasks.Count > 0)
+            {
+                if (dailyTasks.Count > 0 && dbDailyTasks.Count > 0)
+                {
+                    await DailyTasksRepository.UpdateAsync(
+                        dbDailyTasks[0], dailyTasks[0]);
+
+                    dbDailyTasks.Remove(dbDailyTasks[0]);
+                    dailyTasks.Remove(dailyTasks[0]);
+                }
+                else
+                {
+                    await DailyTasksRepository.DeleteAsync(dbDailyTasks[0]);
+                    dbDailyTasks.Remove(dbDailyTasks[0]);
+                }
+            }
+
+            return true;
+        }
+        private (List<DailyTaskEntity>, List<DailyTaskEntity>)
+            DeleteEqualFieldsFromTwoDailyTasksLists(
+                List<DailyTaskEntity> dbDailyTasks,
+                List<DailyTaskEntity> dailyTasks)
+        {
+            for (int i = 0; i < dbDailyTasks.Count; i++)
+            {
+                for (int j = 0; j < dailyTasks.Count; j++)
+                {
+                    if (dbDailyTasks[i].TaskDescription ==
+                        dailyTasks[j].TaskDescription
+                        &&
+                        dbDailyTasks[i].Status ==
+                        dailyTasks[j].Status
+                        &&
+                        dbDailyTasks[i].Importance ==
+                        dailyTasks[j].Importance)
+                    {
+                        dbDailyTasks.Remove(dbDailyTasks[i]);
+                        dailyTasks.Remove(dailyTasks[j]);
+
+                        i--; j--;
+
+                        break;
+                    }
+                }
+            }
+
+            return (dbDailyTasks, dailyTasks);
+        }
+        private List<DailyTaskEntity> DeleteFieldsWithEmptyTaskDescription(
+            List<DailyTaskEntity> dailyTasks)
+        {
+            for (int i = 0; i < dailyTasks.Count; i++)
+            {
+                if (dailyTasks[i].TaskDescription == null)
+                {
+                    dailyTasks.Remove(dailyTasks[i]);
+                    i--;
+                }
+            }
+
+            return dailyTasks;
         }
     }
 }

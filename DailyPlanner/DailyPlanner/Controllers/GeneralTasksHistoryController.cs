@@ -38,6 +38,8 @@ namespace DailyPlanner.Controllers
         {
             generalTasksHistoryModel.GeneralTasksRepository = _generalTasksRepository;
 
+            generalTasksHistoryModel.CheckGeneralTasksInputData();
+
             if (ModelState.IsValid && generalTasksHistoryModel.CorrectInputData)
             {
                 await generalTasksHistoryModel.SaveChangesWithGeneralTasks();

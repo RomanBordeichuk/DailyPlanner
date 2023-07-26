@@ -12,5 +12,6 @@ namespace DailyPlanner.Repository.Interfaces
         Task<List<DateOnly>> GetDatesList();
         Task<List<GeneralTaskEntity>> GetGeneralTasksByExecutionDateMonth(
             int month, int year);
+        Task<GeneralTaskEntity> GetClosesGeneralTaskByUserId(int userId);
     }
 }

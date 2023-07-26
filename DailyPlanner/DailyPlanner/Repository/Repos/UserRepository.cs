@@ -1,6 +1,6 @@
-﻿using DailyPlanner.Repository.Interfaces;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using DailyPlanner.Repository.Entitites;
+using DailyPlanner.Repository.Interfaces;
 
 namespace DailyPlanner.Repository.Repos
 {

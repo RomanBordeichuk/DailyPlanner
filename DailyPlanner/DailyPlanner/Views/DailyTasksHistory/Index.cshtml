@@ -1,0 +1,34 @@
+@using DailyPlanner.Models
+
+@model DailyTasksHistoryModel
+@{
+    ViewData["Title"] = "Daily Tasks History";
+}
+
+<h1>Daily Tasks History</h1>
+
+<a asp-controller="Main" asp-action="Index">Back to Main</a><br>
+<a asp-controller="DailyTasks" asp-action="Index">Daily Tasks</a><br>
+
+<form method="post" asp-controller="DailyTasksHistory" 
+    asp-action="CurrentDailyTasksHistory">
+    <input id="currentDateInput" style="display: none;" 
+        asp-for="CurrentDateString" type="text">
+    <div>
+    @foreach (List<DateOnly> monthDatesList in Model.DatesList)
+    {
+        <div>
+            <span>
+                @Model.GetMonthName(monthDatesList[0].Month)
+                @monthDatesList[0].Year
+            </span><br>
+            @foreach(DateOnly date in monthDatesList){
+            <button onclick="setCurrentDate(@date.Day, @date.Month, @date.Year)" 
+                asp-controller="DailyTasksHistory" asp-action="CurrentDailyTasksHistory">
+                @date.Day @Model.GetMonthName(date.Month) @date.Year
+            </button><br>
+            }
+        </div>
+    }
+    </div>
+</form>

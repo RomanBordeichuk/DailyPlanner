@@ -1,9 +1,8 @@
 ﻿using DailyPlanner.Enums;
-using DailyPlanner.Repository.Interfaces;
 
 namespace DailyPlanner.Repository.Entitites
 {
-    public class DailyTaskEntity : IDailyTaskEntity
+    public class DailyTaskEntity
     {
         public int Id { get; set; }
         public string? TaskDescription { get; set; }

@@ -1,9 +1,8 @@
-﻿using DailyPlanner.Repository.Interfaces;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DailyPlanner.Repository.Entitites
 {
-    public class DailyTasksListEntity : IDailyTasksListEntity
+    public class DailyTasksListEntity
     {
         public int Id { get; set; }
 

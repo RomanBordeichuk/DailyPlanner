@@ -1,12 +1,11 @@
 ﻿using DailyPlanner.Enums;
-using DailyPlanner.Interfaces;
 using DailyPlanner.Repository.Entitites;
 using DailyPlanner.Repository.Interfaces;
 using DailyPlanner.StaticClasses;
 
 namespace DailyPlanner.Models
 {
-    public class GeneralTasksModel : IGeneralTasksModel
+    public class GeneralTasksModel
     {
         public DateOnly Date { get; set; } = DateStatic.Date;
         public List<GeneralTaskEntity> GeneralTasks { get; set; } = new();
@@ -63,6 +62,7 @@ namespace DailyPlanner.Models
                 List<GeneralTaskEntity> generalTasks = GeneralTasks;
 
                 generalTasks = DeleteFieldsWithEmptyTaskDescription(generalTasks);
+                dbGeneralTasks = DeleteFieldsWithEmptyTaskDescription(dbGeneralTasks);
 
                 (dbGeneralTasks, generalTasks) = DeleteEqualFieldsFromTwoGeneralTasksLists(
                     dbGeneralTasks, generalTasks);

@@ -12,10 +12,13 @@
     <script>
         function setCurrentMonthTasksList(month, year){
             const currentMonthInput = document.getElementById("currentMonthInput");
-            const submitButton = document.getElementById("submitButton");
 
             currentMonthInput.value = month + "." + year;
-            submitButton.submit();
+        }
+        function setCurrentDate(day, month, year){
+            const currentDateInput = document.getElementById("currentDateInput"); 
+            
+            currentDateInput.value = day + "." + month + "." + year;
         }
     </script>
 </body>

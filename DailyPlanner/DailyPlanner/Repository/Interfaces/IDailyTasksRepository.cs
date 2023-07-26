@@ -8,9 +8,11 @@ namespace DailyPlanner.Repository.Interfaces
         Task<DailyTaskEntity> UpdateAsync(
             DailyTaskEntity oldDailyTask, DailyTaskEntity newDailyTask);
         Task<DailyTaskEntity> DeleteAsync(DailyTaskEntity dailyTask);
-        Task<DailyTasksListEntity> GetDailyTasksListObj(DateOnly date);
+        Task<DailyTasksListEntity> GetDailyTasksListObjByDate(DateOnly date);
         Task<DailyTasksListEntity> DeleteDailyTasksList(
             DailyTasksListEntity dailyTasksList);
         Task<List<DailyTaskEntity>> GetDailyTasksById(int id);
+        Task<List<DateOnly>> GetDailyTasksDays();
+        Task<List<DailyTaskEntity>> GetDailyTasksByListId(int listId);
     }
 }
